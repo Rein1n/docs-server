@@ -261,7 +261,11 @@ Use the Microsoft Management Console (MMC) to create a new user account with the
 .. Pre-windows logon name: `<user-name>`
 .. _Select_ option: `Password never expires`
 .. _Do not select_ this option: `User must change password at next logon`
-.. In menu:Delegation[], _select_ `Trust this user for delegation to any service (Kerberos only)`
+.. In menu:Delegation[], +
+_select_ `Trust this user for delegation to any service (Kerberos only)` +
+alternatively +
+_select_ `Trust this user for delegation to specified services only` and add +
+`cifs/WIN-ABCDE.win.srv.com` (choose the server where the smb service is provided and select the cifs service)
 
 . Associate the new user with the Service Principal Name (SPN). To do so, open a command shell and type:
 +
@@ -315,7 +319,8 @@ https://docs.tibco.com/pub/amx-bpm/4.3.0/doc/html/bpmhelp/GUID-6E7B3AD0-D18A-490
 
 ==== Linux
 
-* Configure `/etc/krb5.conf` for the use with Kerberos:
+* Configure `/etc/krb5.conf` for the use with Kerberos. +
+Note that only required/recommended or non default settings are used:
 +
 --
 [source,plaintext]
@@ -325,6 +330,8 @@ https://docs.tibco.com/pub/amx-bpm/4.3.0/doc/html/bpmhelp/GUID-6E7B3AD0-D18A-490
     default_tkt_enctypes = aes256-cts-hmac-sha1-96
     default_tgs_enctypes = aes256-cts-hmac-sha1-96
     permitted_enctypes   = aes256-cts-hmac-sha1-96
+    forwardable          = true
+    proxiable            = true
 
 [realms]
     <REALM> = {
@@ -406,7 +413,7 @@ sudo chmod 0400 <keytab-file-location>/<user-name>.keytab
 ----
 --
 
-* Create a new ownCloud config file `/path-to-owncloud/config/kerberos.config.php` with the following contents:
+* Create a new ownCloud config file `/path-to-owncloud/config/kerberos.config.php` with the following contents or add only the comment and key to an existing `config.php` file:
 +
 --
 [source,php]
@@ -420,7 +427,7 @@ sudo chmod 0400 <keytab-file-location>/<user-name>.keytab
 ];
 ----
 --
-This file will be read xref:configuration/server/config_sample_php_parameters.adoc#introduction[additionally] to existing config files. See the xref:configuration/server/config_apps_sample_php_parameters.adoc[Apps Config.php Parameters] for more Kerberos configuration options.
+An new file will be read xref:configuration/server/config_sample_php_parameters.adoc#introduction[additionally] to existing config files. See the xref:configuration/server/config_apps_sample_php_parameters.adoc[Apps Config.php Parameters] for more Kerberos configuration options.
 
 ==== Testing
 
